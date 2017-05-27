@@ -69,8 +69,9 @@ lang_init()
 		}
 	}
 
+	_language.lang_init_called:=true
+	
 	initLanguageCodes()
-	lang_setLanguage(_language.lang)
 }
 
 ;Set a language. It can be called to change the language. You can either pass the code, Name, EnName or the index of the language
@@ -78,39 +79,43 @@ lang_setLanguage(p_lang = "")
 {
 	global _language
 	
-	if not isobject(_language)
+	if (not _language.lang_init_called)
 	{
 		MsgBox,16, bug!, lang_setLanguage() must becalled before lang_init()
 		return
 	}
 	
-	if p_lang is number
-		lang:=_language.allLangCodes[p_lang]
-	else
+	if (p_lang != "")
 	{
-		for onecode, onelang in _language.allLangs
+		if p_lang is number
+			lang:=_language.allLangCodes[p_lang]
+		else
 		{
-			if (onecode = p_lang)
+			for onecode, onelang in _language.allLangs
 			{
-				lang:= onecode
-				break
-			}
-			if (onelang.enlangname = p_lang)
-			{
-				lang:= onecode
-				break
-			}
-			if (onelang.langname = p_lang)
-			{
-				lang:= onecode
-				break
+				if (onecode = p_lang)
+				{
+					lang:= onecode
+					break
+				}
+				if (onelang.enlangname = p_lang)
+				{
+					lang:= onecode
+					break
+				}
+				if (onelang.langname = p_lang)
+				{
+					lang:= onecode
+					break
+				}
 			}
 		}
-	}
-	
-	if (not lang)
-	{
-		MsgBox, 16, , Language "%lang%" is invalid.
+		
+		if (not lang)
+		{
+			MsgBox, 16, , Language "%p_lang%" is invalid.
+			return
+		}
 	}
 	
 	_language.lang := lang
@@ -118,33 +123,49 @@ lang_setLanguage(p_lang = "")
 	directory := _language.dir
 	
 	;if no language was set, try to automatically detect the proper language
-	if (lang="")
+	if (not lang)
 	{
-		syslang:=_language.systemcodes[A_Language]
-		for index, templang in _share.allLangs
+		syslang:=_language.systemcodes["" A_Language]
+		for onecode, onelang in _language.allLangs
 		{
-			;MsgBox % templang " " %templang%code " " A_Language
-			tempstring := _language[templang].enlangname
-			IfInString, syslang, tempstring
+			templangenname:=onelang.langenname
+			templangcode:=onelang.code
+			IfInString, syslang, %templangenname%
 			{
-				_language.lang := templang
+				_language.lang := templangcode
 				break
 			}
 		}
 		;if no language found, set english as default
 		if (not _language.lang)
-			(_language.lang="en")
+		{
+			_language.lang:="en"
+		}
 	}
 	
 	if (_language.readAll)
 		lang_ReadAllTranslations()
+	
+	_language.lang_setLanguage_called:=true
 }
 
 ;translate one string
 lang(langvar,$1="",$2="",$3="",$4="",$5="",$6="",$7="",$8="",$9="")
 {
-	static guiCreated
 	global _language, developing
+	
+	if (not _language.lang_init_called)
+	{
+		MsgBox,16, bug!, lang_setLanguage() must becalled before lang()
+		return
+	}
+	
+	;if set language was not called yet, call it now
+	if (not _language.lang_setLanguage_called)
+	{
+		lang_setLanguage(_language.lang)
+	}
+	
 	lang := _language.lang
 	NoCache := _language.NoCache
 	directory := _language.dir

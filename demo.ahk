@@ -9,11 +9,13 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ;optional: create the object _language and write some setting. If you don't do that, default settings will be used
 _language:=Object()
 _language.dir:=A_ScriptDir "\language" ;Directory where the translations are stored
-_language.lang:="en" ;chosen language
 
 ;call the initialization routine
 lang_init()
 
+;now you can set a desired language. If you pass an empty string, lang_setLanguage() tries to choose it automatically, depending on Windows language
+iniread,inilang, settings.ini, language, language, %a_space%
+lang_setLanguage(inilang)
 
 ;now you can use the function lang()
 
@@ -39,6 +41,7 @@ return
 languageChanged:
 gui,submit, nohide
 lang_setLanguage(languageChanged)
+iniwrite,% _language.lang, settings.ini, language, language
 
 guicontrol,,text1, % lang("Hello world")
 guicontrol,,text2, % lang("You can make your application multilingual!")
@@ -46,3 +49,6 @@ guicontrol,,text3, % lang("Please, change the language")
 gui,show,,% lang("Lang() demonstration")
 
 return
+
+guiclose:
+ExitApp
