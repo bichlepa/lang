@@ -21,7 +21,8 @@ lang_setLanguage(inilang)
 
 gui, add, text,ym xm vtext1 w300, % lang("Hello world")
 gui, add, text,xm Y+10 vtext2 w300, % lang("You can make your application multilingual!")
-gui, add, text,xm Y+10 vtext3 w200, % lang("Please, change the language")
+gui, add, text,xm Y+10 vtext3 w300, % lang("The current language is %1%!", _language.allLangs[_language.lang].langname)
+gui, add, text,xm Y+10 vtext4 w200, % lang("Please, change the language")
 
 ;This is an example implementation of language selection
 langnames:=""
@@ -45,7 +46,8 @@ iniwrite,% _language.lang, settings.ini, language, language
 
 guicontrol,,text1, % lang("Hello world")
 guicontrol,,text2, % lang("You can make your application multilingual!")
-guicontrol,,text3, % lang("Please, change the language")
+guicontrol,,text3, % lang("The current language is %1%!", _language.allLangs[_language.lang].langname)
+guicontrol,,text4, % lang("Please, change the language")
 gui,show,,% lang("Lang() demonstration")
 
 return
