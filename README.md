@@ -13,4 +13,4 @@ There is a translation tool included. This tool allows you and other contributor
 ![TranslationTool](https://www.dropbox.com/s/lhau3ep506h30xy/Translation%20tool.png?dl=1)
 
 ## howto
-Please see the demonstration files.
+Please see the introduction in the demonstration files.
