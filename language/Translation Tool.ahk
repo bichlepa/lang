@@ -406,3 +406,6 @@ return
 NewLangCancel:
 gui,2:destroy
 return
+
+mainguiclose:
+ExitApp

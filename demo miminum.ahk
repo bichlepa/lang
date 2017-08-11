@@ -10,7 +10,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 ;call the initialization routine
 lang_init()
-;wen do not call lang_setLanguage(). lang() will try to choose the languages automatically depending on the Windows language
+;We don't call lang_setLanguage(). lang() will try to choose the languages automatically depending on the Windows language
 
 ;now you can use the function lang()
 gui, add, text,ym xm vtext1 w300, % lang("Hello world")
