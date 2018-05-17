@@ -68,7 +68,11 @@ lang_init()
 			_language.allLangEnNames.push(enlangname)
 		}
 	}
-
+	
+	;Warn if fallback language was not found
+	if (not _language.allLangs[_language.fallbacklang])
+		MsgBox,16, lang() , Fallback language not found in directory %directory%
+	
 	_language.lang_init_called:=true
 	
 	initLanguageCodes()
@@ -81,7 +85,7 @@ lang_setLanguage(p_lang = "")
 	
 	if (not _language.lang_init_called)
 	{
-		MsgBox,16, bug!, lang_setLanguage() must becalled before lang_init()
+		MsgBox,16, lang(), Bug detected! lang_setLanguage() must becalled before lang_init()
 		return
 	}
 	
@@ -113,7 +117,7 @@ lang_setLanguage(p_lang = "")
 		
 		if (not lang)
 		{
-			MsgBox, 16, , Language "%p_lang%" is invalid.
+			MsgBox, 16,lang()  , Language "%p_lang%" is invalid.
 			return
 		}
 	}
@@ -136,10 +140,10 @@ lang_setLanguage(p_lang = "")
 				break
 			}
 		}
-		;if no language found, set english as default
+		;if no language found, set fallback language as default
 		if (not _language.lang)
 		{
-			_language.lang:="en"
+			_language.lang:=_language.fallbacklang
 		}
 	}
 	
@@ -156,7 +160,7 @@ lang(langvar,$1="",$2="",$3="",$4="",$5="",$6="",$7="",$8="",$9="")
 	
 	if (not _language.lang_init_called)
 	{
-		MsgBox,16, bug!, lang_setLanguage() must becalled before lang()
+		MsgBox,16, lang() , Bug detected! lang_setLanguage() must becalled before lang()
 		return
 	}
 	
